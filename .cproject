@@ -50,6 +50,8 @@
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
 									<listOptionValue builtIn="false" value="../Libs/CMSIS-DSP/Include"/>
 									<listOptionValue builtIn="false" value="../Libs/CMSIS-DSP/PrivateInclude"/>
+									<listOptionValue builtIn="false" value="../Libs/CANopenNode"/>
+									<listOptionValue builtIn="false" value="../Libs/CANopenNode_STM32"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.884430002" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
@@ -78,6 +80,8 @@
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Libs/CANopenNode"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Libs/CANopenNode_STM32"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Libs/CMSIS-DSP/Source"/>
 					</sourceEntries>
 				</configuration>
