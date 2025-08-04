@@ -13,12 +13,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Generate Debug build folder
+        run: mkdir -p Debug
+  
       - name: Build STM32CubeIDE project (Debug)
         uses: xanderhendriks/action-build-stm32cubeide@v15.0
         with:
           project-path: '.'
           project-target: 'foc_drv8323_g4'
-          continue-on-error: true
 
       - name: Upload built binaries
         uses: actions/upload-artifact@v4
@@ -27,4 +29,3 @@ jobs:
           path: |
             Debug/*.elf
             Debug/*.bin
-          continue-on-error: true
