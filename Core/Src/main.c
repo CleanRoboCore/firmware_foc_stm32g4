@@ -21,7 +21,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "arm_math.h"
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -80,7 +81,17 @@ static void MX_LPUART1_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void test_cmsis_dsp(void) {
+    float32_t input[] = { -1.0f, 2.0f, -3.5f, 4.2f };
+    float32_t output[4];
+    uint32_t blockSize = 4;
 
+    arm_abs_f32(input, output, blockSize);
+
+    for (uint32_t i = 0; i < blockSize; i++) {
+        printf("abs[%lu] = %f\n", i, output[i]);
+    }
+}
 /* USER CODE END 0 */
 
 /**
@@ -123,7 +134,7 @@ int main(void)
   MX_TIM8_Init();
   MX_LPUART1_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  test_cmsis_dsp();
   /* USER CODE END 2 */
 
   /* Infinite loop */
