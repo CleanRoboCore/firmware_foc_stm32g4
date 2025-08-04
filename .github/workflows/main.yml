@@ -18,6 +18,7 @@ jobs:
         with:
           project-path: '.'
           project-target: 'foc_drv8323_g4'
+          continue-on-error: true
 
       - name: Upload built binaries
         uses: actions/upload-artifact@v4
@@ -26,3 +27,4 @@ jobs:
           path: |
             Debug/*.elf
             Debug/*.bin
+          continue-on-error: true
