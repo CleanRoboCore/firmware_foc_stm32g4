@@ -1,0 +1,28 @@
+name: Build STM32CubeIDE Project
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build STM32CubeIDE project (Debug)
+        uses: xanderhendriks/action-build-stm32cubeide@v10.0
+        with:
+          project-path: '.'
+          project-target: 'firmware_foc_stm32g4/Debug'
+
+      - name: Upload built binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware
+          path: |
+            Debug/*.elf
+            Debug/*.bin
