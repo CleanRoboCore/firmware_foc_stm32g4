@@ -17,7 +17,7 @@ jobs:
         uses: xanderhendriks/action-build-stm32cubeide@v10.0
         with:
           project-path: '.'
-          project-target: 'firmware_foc_stm32g4/Debug'
+          project-target: 'firmware_foc_stm32g4'
 
       - name: Upload built binaries
         uses: actions/upload-artifact@v4
