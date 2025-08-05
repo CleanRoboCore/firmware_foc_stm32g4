@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include "arm_math.h"
 #include "CO_app_STM32.h"
+#include "math_helper.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -135,6 +136,7 @@ int main(void)
   canOpenNodeSTM32.baudrate = 125;
   canopen_app_init(&canOpenNodeSTM32);
 
+  math_clamp(5, 10, 15);
   /* USER CODE END 2 */
 
   /* Infinite loop */
