@@ -32,6 +32,8 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
+extern TIM_HandleTypeDef htim1;
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

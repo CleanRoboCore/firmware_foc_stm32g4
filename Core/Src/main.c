@@ -25,6 +25,7 @@
 #include "arm_math.h"
 #include "CO_app_STM32.h"
 #include "math_helper.h"
+#include "encoder_driver.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -136,13 +137,19 @@ int main(void)
   canOpenNodeSTM32.baudrate = 125;
   canopen_app_init(&canOpenNodeSTM32);
 
+  encoder_init();
+
   math_clamp(5, 10, 15);
+  int32_t current_pos = 0;
+  encoder_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  current_pos = encoder_get_position();
+	  HAL_Delay(100);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
