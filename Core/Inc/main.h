@@ -33,7 +33,10 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 
 extern TIM_HandleTypeDef htim1;
-
+extern HRTIM_HandleTypeDef hhrtim1;
+extern DAC_HandleTypeDef hdac1;
+extern DAC_HandleTypeDef hdac2;
+extern HRTIM_TimeBaseCfgTypeDef pTimeBaseCfg;
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
