@@ -114,3 +114,51 @@ void test_charge_pump_rotation(void) {
 
     state++;
 }
+
+#define DUTY_MIN (0.05f)  // 5% minimum duty to keep bootstrap alive
+
+float clamp_duty(float d) {
+    if (d < DUTY_MIN) return DUTY_MIN;
+    if (d > 1.0f - DUTY_MIN) return 1.0f - DUTY_MIN;
+    return d;
+}
+
+void test_spin_high_voltage_6x_pwm_safe(void)
+{
+    static float angle = 0.0f;
+    const float step = 0.02f;
+
+    uint32_t period = __HAL_HRTIM_GETPERIOD(&hhrtim1, HRTIM_TIMERINDEX_TIMER_A);
+
+    float sa = sinf(angle);
+    float sb = sinf(angle - 2 * PI_F / 3);
+    float sc = sinf(angle + 2 * PI_F / 3);
+
+    // Clamp high and low sides to ensure bootstrap refresh
+    float ha_f = clamp_duty((sa * 0.5f + 0.5f));
+    float la_f = clamp_duty((-sa * 0.5f + 0.5f));
+    float hb_f = clamp_duty((sb * 0.5f + 0.5f));
+    float lb_f = clamp_duty((-sb * 0.5f + 0.5f));
+    float hc_f = clamp_duty((sc * 0.5f + 0.5f));
+    float lc_f = clamp_duty((-sc * 0.5f + 0.5f));
+
+    uint32_t ha = (uint32_t)(ha_f * period);
+    uint32_t la = (uint32_t)(la_f * period);
+    uint32_t hb = (uint32_t)(hb_f * period);
+    uint32_t lb = (uint32_t)(lb_f * period);
+    uint32_t hc = (uint32_t)(hc_f * period);
+    uint32_t lc = (uint32_t)(lc_f * period);
+
+    // Write duty values
+    hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_A].CMP1xR = ha;
+    hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_A].CMP2xR = la;
+    hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_C].CMP1xR = hb;
+    hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_C].CMP2xR = lb;
+    hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_D].CMP1xR = hc;
+    hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_D].CMP2xR = lc;
+
+    // Step the angle
+    angle += step;
+    if (angle >= 2 * PI_F)
+        angle -= 2 * PI_F;
+}

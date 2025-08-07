@@ -142,7 +142,7 @@ int main(void)
   encoder_init();
 
   math_clamp(5, 10, 15);
-  int32_t current_pos = 0;
+
   encoder_init();
   drv8323_init();
   pwm_init();
@@ -154,8 +154,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  test_charge_pump_rotation();
-	  HAL_Delay(500);
+	  test_spin_high_voltage_6x_pwm_safe();
+	  HAL_Delay(1);
 	  //current_pos = encoder_get_position();
     /* USER CODE END WHILE */
 
