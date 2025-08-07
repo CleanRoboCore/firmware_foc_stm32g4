@@ -52,3 +52,65 @@ void pwm_spin_test(void) {
     if (angle >= 2*PI_F) angle -= 2*PI_F;
 }
 
+// Continuous PWM to maintain charge pump
+void test_charge_pump_active(void) {
+    uint32_t period = __HAL_HRTIM_GETPERIOD(&hhrtim1, HRTIM_TIMERINDEX_TIMER_A);
+
+    // 10% duty cycle on all three high-sides to get 2V output
+    // Phase A high-side (10% duty = 2V)
+    hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_A].CMP1xR = period / 10;
+
+    // Phase B high-side (10% duty = 2V)
+    hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_C].CMP1xR = period / 10;
+
+    // Phase C high-side (10% duty = 2V)
+    hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_D].CMP1xR = period / 10;
+
+    // All low-sides OFF for safety (all phases floating low through body diodes)
+    hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_A].CMP2xR = 0;
+    hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_C].CMP2xR = 0;
+    hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_D].CMP2xR = 0;
+}
+
+void test_charge_pump_rotation(void) {
+    uint32_t period = __HAL_HRTIM_GETPERIOD(&hhrtim1, HRTIM_TIMERINDEX_TIMER_A);
+    uint32_t duty = period / 10;  // ~10% duty
+
+    // Rotate test states with a static counter
+    static uint8_t state = 0;
+
+    // Clear all first for safety
+    hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_A].CMP1xR = 0; // A high
+    hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_C].CMP1xR = 0; // B high
+    hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_D].CMP1xR = 0; // C high
+
+    hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_A].CMP2xR = 0; // A low
+    hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_C].CMP2xR = 0; // B low
+    hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_D].CMP2xR = 0; // C low
+
+    switch (state) {
+        case 0:
+            // A-HS, B-HS, C-LS
+            hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_A].CMP1xR = duty;
+            hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_C].CMP1xR = duty;
+            hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_D].CMP2xR = duty;
+            break;
+        case 1:
+            // B-HS, C-HS, A-LS
+            hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_C].CMP1xR = duty;
+            hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_D].CMP1xR = duty;
+            hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_A].CMP2xR = duty;
+            break;
+        case 2:
+            // C-HS, A-HS, B-LS
+            hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_D].CMP1xR = duty;
+            hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_A].CMP1xR = duty;
+            hhrtim1.Instance->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_C].CMP2xR = duty;
+            break;
+        default:
+            state = 0;
+            return;
+    }
+
+    state++;
+}

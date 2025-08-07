@@ -12,4 +12,6 @@ void drv8323_init() {
 	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 4090);
 
 	// lmao i forgot enable pin
+	HAL_DAC_Start(&hdac2, DAC_CHANNEL_1);
+	HAL_DAC_SetValue(&hdac2, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 4090);
 }
